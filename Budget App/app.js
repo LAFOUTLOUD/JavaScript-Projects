@@ -35,25 +35,19 @@ var UIController = (function() {
 // MODULE 2
 var budgetController = (function() {
 
-	var expense = function(id, description, value) {
+	var Expense = function(id, description, value) {
 		this.id = id;
 		this.description = description;
 		this.value = value;
 	}
 	
-	var income = function(id, description, value) {
+	var Income = function(id, description, value) {
 		this.id = id;
 		this.description = description;
 		this.value = value;
 	}
 	
 })
-
-var expense = function(id, description, value) {
-		this.id = id;
-		this.description = description;
-		this.value = value;
-	}
 
 // MODULE 3
 var globalController = ( function(UICtrl) {
