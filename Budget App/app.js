@@ -66,9 +66,13 @@ var budgetController = (function() {
 		// if someone calls this method, it creates a new INSTANCE based on either the Expense || Income OBJECT
 		addItem: function(type, des, val) {
 		
-			ID = 0;
+			// we want the ID value to be = to the last ID value + 1
+			// the value of ID is equal to the value in the allItems property of the data object
+			// the value in that property is equal to 
+			// the length of the value in the allItems property of the data object, minus 1
+			var ID = data.allItems[type][ data.allItems[type].length - 1 ].id + 1;
 
-			if(type === 'exp') {
+			if (type === 'exp') {
 			
 				// the method is what creates I. using the FC/P above
 				var newItem = new Expense(ID, des, val);
@@ -91,7 +95,7 @@ var budgetController = (function() {
 });
 
 // MODULE 3
-var globalController = ( function(UICtrl) {
+var globalController = (function(UICtrl, budgetCtrl) {
 	
 	function setupEventListeners() { // (3)
 		
@@ -115,7 +119,7 @@ var globalController = ( function(UICtrl) {
 		
 	};
 
-	function ctrlAddItem() {
+	function ctrlAddItem() { // (4)
 			
 		// 1. Get input values
 		var input = UICtrl.getInput();
@@ -142,6 +146,6 @@ var globalController = ( function(UICtrl) {
 			   
 	}
 	
-})(UIController);
+})(UIController, budgetController);
 
 globalController.init(); // (1)
