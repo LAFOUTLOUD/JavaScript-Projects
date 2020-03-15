@@ -61,7 +61,34 @@ var budgetController = (function() {
 		   
 	};
 	
-})
+	return{
+	
+		// if someone calls this method, it creates a new INSTANCE based on either the Expense || Income OBJECT
+		addItem: function(type, des, val) {
+		
+			ID = 0;
+
+			if(type === 'exp') {
+			
+				// the method is what creates I. using the FC/P above
+				var newItem = new Expense(ID, des, val);
+				
+			} else if (type === 'inc') {
+			
+				// the method is what creates an I. if the Income FC/P above
+				var newItem = new Income(ID, des, val);
+			
+			}
+			
+			data.allItems[type].push(newItem);
+			
+			return addItem;
+		
+		}
+	
+	}
+	
+});
 
 // MODULE 3
 var globalController = ( function(UICtrl) {
