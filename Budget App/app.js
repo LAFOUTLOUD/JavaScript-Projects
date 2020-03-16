@@ -79,7 +79,7 @@ var budgetController = (function() {
 			// Create new ID
 			if (data.allItems[type].length > 0) {
 			
-				// var ID = data.allItems[type][ data.allItems[type].length - 1 ].id + 1;
+				// the value of the ID increases by 1 each time 
 				ID = data.allItems[type][ data.allItems[type].length - 1 ].id + 1;
 			
 			} else {
@@ -89,12 +89,12 @@ var budgetController = (function() {
 			}
 
 			// Create
-			if (type === 'exp') {
+			if (type === 'exp') { // '-' => exp
 			
 				// the method is what creates I. using the FC/P above
 				newItem = new Expense(ID, des, val);
 				
-			} else if (type === 'inc') {
+			} else if (type === 'inc') { // '+' = inc
 			
 				// the method is what creates an I. if the Income FC/P above
 				newItem = new Income(ID, des, val);
