@@ -35,68 +35,94 @@ var UIController = (function() {
 // MODULE 2
 var budgetController = (function() {
 
+	// private section
 	var Expense = function(id, description, value) {
 		this.id = id;
 		this.description = description;
 		this.value = value;
-	}
+	};
 	
 	var Income = function(id, description, value) {
 		this.id = id;
 		this.description = description;
 		this.value = value;
-	}
+	};
 	
 	var data = {
 				   
 		allItems: {	
 			exp: [],
 			inc: [],	   
-	},
-				   
+		},
+
 		totals: {   
 			exp: 0,
 			inc: 0	   
 		}
 		   
 	};
-	
+
+	// public section
 	return{
 	
 		// if someone calls this method, it creates a new INSTANCE based on either the Expense || Income OBJECT
 		addItem: function(type, des, val) {
 		
+			// declares the vars used by the method
+			var newItem, ID;
+		
 			// we want the ID value to be = to the last ID value + 1
 			// the value of ID is equal to the value in the allItems property of the data object
 			// the value in that property is equal to 
 			// the length of the value in the allItems property of the data object, minus 1
-			var ID = data.allItems[type][ data.allItems[type].length - 1 ].id + 1;
+			
+			// Create new ID
+			if (data.allItems[type].length > 0) {
+			
+				// var ID = data.allItems[type][ data.allItems[type].length - 1 ].id + 1;
+				ID = data.allItems[type][ data.allItems[type].length - 1 ].id + 1;
+			
+			} else {
+			
+				ID = 0;
+			
+			}
 
+			// Create
 			if (type === 'exp') {
 			
 				// the method is what creates I. using the FC/P above
-				var newItem = new Expense(ID, des, val);
+				newItem = new Expense(ID, des, val);
 				
 			} else if (type === 'inc') {
 			
 				// the method is what creates an I. if the Income FC/P above
-				var newItem = new Income(ID, des, val);
+				newItem = new Income(ID, des, val);
 			
 			}
 			
+			// Pushes it into the above data structure
 			data.allItems[type].push(newItem);
 			
-			return addItem;
+			// returns the new element
+			return newItem;
 		
+		},
+		
+		testing: function() {
+			console.log(data);
 		}
+		
+	};
 	
-	}
-	
-});
+})();
 
 // MODULE 3
 var globalController = (function(UICtrl, budgetCtrl) {
 	
+	// declares vars.
+	var input;
+
 	function setupEventListeners() { // (3)
 		
 		var DOM = UICtrl.getDOMstrings();
@@ -122,10 +148,11 @@ var globalController = (function(UICtrl, budgetCtrl) {
 	function ctrlAddItem() { // (4)
 			
 		// 1. Get input values
-		var input = UICtrl.getInput();
+		input = UICtrl.getInput();
 		console.log(input);
-				   
+
 		// 2. Add the new item to our data structure/budget controller
+		var newItem = budgetCtrl.addItem(input.type, input.description, input.value);
 				   
 		// 3. Add the new item to the UI
 				   
@@ -141,7 +168,7 @@ var globalController = (function(UICtrl, budgetCtrl) {
 		
 			console.log('Application has started.');
 			setupEventListeners();
-		
+
 		}
 			   
 	}
