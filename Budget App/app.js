@@ -1,7 +1,7 @@
 // MOD 1
 var UIController = (function() {
 
-	// stores the code for the EL/H into an object to make them easier to change
+	// stores the code for the EL/H to make them easier to change
 	var DOMstrings = {
 		inputType: '.add__type',
 		inputDescription: '.add__description',
@@ -14,7 +14,7 @@ var UIController = (function() {
 	return{
 			
 		// getInput recieves the inputs from the input fields and assigns thier values to the UIController object
-		getInput: function() {
+		getInput: function() { // (5)
 
 			return {
 
@@ -28,7 +28,7 @@ var UIController = (function() {
 
 		},
 		
-		addListItem: function(obj, type) {
+		addListItem: function(obj, type) { // (6)
 			
 			var html, newHtml, element;
 			
@@ -70,6 +70,7 @@ var UIController = (function() {
 			fieldsArr[0].focus();
 		},
 
+		// makes the DOMstrings object PUBLIC 
 		getDOMstrings: function() {
 				
 			return DOMstrings;
@@ -83,19 +84,21 @@ var UIController = (function() {
 // MOD 2
 var budgetController = (function() {
 
-	// private section
+	// FC/P for the Expense
 	var Expense = function(id, description, value) {
 		this.id = id;
 		this.description = description;
 		this.value = value;
 	};
 	
+	// FC/P for the Income
 	var Income = function(id, description, value) {
 		this.id = id;
 		this.description = description;
 		this.value = value;
 	};
 	
+	// stores the data
 	var data = {
 				   
 		allItems: {	
@@ -110,7 +113,6 @@ var budgetController = (function() {
 		   
 	};
 
-	// public section
 	return{
 	
 		// if someone calls this method, it creates a new INSTANCE based on either the Expense || Income OBJECT
@@ -118,11 +120,6 @@ var budgetController = (function() {
 		
 			// declares the vars used by the method
 			var newItem, ID;
-		
-			// we want the ID value to be = to the last ID value + 1
-			// the value of ID is equal to the value in the allItems property of the data object
-			// the value in that property is equal to 
-			// the length of the value in the allItems property of the data object, minus 1
 			
 			// Create new ID
 			if (data.allItems[type].length > 0) {
@@ -136,15 +133,16 @@ var budgetController = (function() {
 			
 			}
 
-			// Create
+			// IF the type para is 'exp'
 			if (type === 'exp') { // '-' => exp
 			
-				// the method is what creates I. using the FC/P above
+				// creates I. using the Expense FC/P
 				newItem = new Expense(ID, des, val);
-				
+			
+			// ELSE IF the type para is 'inc'
 			} else if (type === 'inc') { // '+' = inc
 			
-				// the method is what creates an I. if the Income FC/P above
+				// creates I. using the Income FC/P
 				newItem = new Income(ID, des, val);
 			
 			}
@@ -155,6 +153,16 @@ var budgetController = (function() {
 			// returns the new element
 			return newItem;
 		
+		},
+		
+		calculateBudget: function() {
+			
+			// calculate total income and expenses
+			
+			// calculate the budget: income - expenses
+			
+			// calculate the percentage of income that we spent
+			
 		},
 		
 		testing: function() {
@@ -211,17 +219,9 @@ var globalController = (function(UICtrl, budgetCtrl) {
 		input = UICtrl.getInput();
 		
 		// we only want all of this code to work IF...
-		// (a) the user doesnt leave the description input field empty => input.description !== ""
-		// (b) if the input field for the value is NOT not a number (if the input is a number)
-			// there is a fn. in JS that tests if a number is not a number: NaN()
-			// the () is what makes it a fn.
-			// !NaN => different than 'not a number'
-			// if the data entered is not a number, the fn. will have a value of 'true'
-		// isNan(input.value)
-		// isNan => is not a number
-		// !isNan => is not Not a number => it should NOT be NOT A NUMBER (double negative, it should be a number)
-		// the input.description cannot be empty and the input.value MUST be a number
-		// and the input.value is greater than 0
+		// (a) the value of input.description is !== than empty
+		// (b) the value of input.value is !isNaN
+		// (c) the value of input.value is greater than 0
 		if(input.description !== "" && !isNaN(input.value) && input.value > 0 ) {
 
 		// 2. Add the new item to our data structure/budget controller
