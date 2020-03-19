@@ -1,6 +1,7 @@
-// MODULE 1
+// MOD 1
 var UIController = (function() {
 
+	// stores the code for the EL/H into an object to make them easier to change
 	var DOMstrings = {
 		inputType: '.add__type',
 		inputDescription: '.add__description',
@@ -12,6 +13,7 @@ var UIController = (function() {
 	
 	return{
 			
+		// getInput recieves the inputs from the input fields and assigns thier values to the UIController object
 		getInput: function() {
 
 			return {
@@ -78,7 +80,7 @@ var UIController = (function() {
 
 })();
 
-// MODULE 2
+// MOD 2
 var budgetController = (function() {
 
 	// private section
@@ -163,7 +165,7 @@ var budgetController = (function() {
 	
 })();
 
-// MODULE 3
+// MOD 3
 var globalController = (function(UICtrl, budgetCtrl) {
 	
 	// declares vars.
@@ -207,10 +209,20 @@ var globalController = (function(UICtrl, budgetCtrl) {
 
 		// 1. Get input values
 		input = UICtrl.getInput();
-		console.log(input);
 		
-		// doesnt work if the user does not enter a value
-		if(input.description !== '') 
+		// we only want all of this code to work IF...
+		// (a) the user doesnt leave the description input field empty => input.description !== ""
+		// (b) if the input field for the value is NOT not a number (if the input is a number)
+			// there is a fn. in JS that tests if a number is not a number: NaN()
+			// the () is what makes it a fn.
+			// !NaN => different than 'not a number'
+			// if the data entered is not a number, the fn. will have a value of 'true'
+		// isNan(input.value)
+		// isNan => is not a number
+		// !isNan => is not Not a number => it should NOT be NOT A NUMBER (double negative, it should be a number)
+		// the input.description cannot be empty and the input.value MUST be a number
+		// and the input.value is greater than 0
+		if(input.description !== "" && !isNaN(input.value) && input.value > 0 ) {
 
 		// 2. Add the new item to our data structure/budget controller
 		newItem = budgetCtrl.addItem(input.type, input.description, input.value);
@@ -222,7 +234,8 @@ var globalController = (function(UICtrl, budgetCtrl) {
 		UICtrl.clearFields();
 				   
 		// 5. Display the budget on the UI
-		updateBudget();	
+		updateBudget();
+		};
 		
 	}
 			   
