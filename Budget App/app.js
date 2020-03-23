@@ -4,13 +4,15 @@ var UIController = (function() {
 	// stores the code for the EL/H to make them easier to change
 	var DOMstrings = {
 		
-		// used by the querySelectors in the getInput method
+		// used by the querySelectors in the getInput method of the UIController MOD
 		inputType: '.add__type',
 		inputDescription: '.add__description',
 		inputValue: '.add__value',
 		
-		
+		// used by the querySelectors in the setupEventListener fn
 		inputBtn: '.add__btn',
+		
+		// ?
 		incomeContainer: '.income__list',
 		expensesContainer: '.expenses__list',
 		
@@ -66,6 +68,15 @@ var UIController = (function() {
 			document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
 		},
 		
+		deleteListItem: function() {
+		
+			// in JS, we cannot dlete an element, we must delete a child
+			// its a good idea to save the selected element first
+			var el = document.getElementById(selectorID);
+			document.getElementById(selectorID).parentNode.removeChild(el);
+		
+		},
+		
 		clearFields: function() {
 
 			var fields, fieldsArr;
@@ -117,14 +128,14 @@ var UIController = (function() {
 // MOD 2
 var budgetController = (function() {
 
-	// FC/P for the Expense
+	// FC/P for creating Expense objects
 	var Expense = function(id, description, value) {
 		this.id = id;
 		this.description = description;
 		this.value = value;
 	};
 	
-	// FC/P for the Income
+	// FC/P for creating Income objects
 	var Income = function(id, description, value) {
 		this.id = id;
 		this.description = description;
@@ -179,27 +190,37 @@ var budgetController = (function() {
 	};
 
 	return{
-	
-		// if someone calls this method, it creates a new INSTANCE based on either the Expense || Income OBJECT
+
+		// when the 'addItem' method is called...
+		// it creates a new INSTANCE, based on either the Expense || Income FC/P
+		// paras passed into the method call, are also passed into the new INSTANCE, and become its properties
 		addItem: function(type, des, val) {
 		
 			// declares the vars used by the method
+			// we declare newItem using var grouping because, the value of newItem changes, and this syntax looks cleaner
 			var newItem, ID;
 			
-			// IF...
-			// the value of the full length...
-			// of the array of the current type value...
-			// of the allItems property...
-			// of the data object...
-			// is greater than 0...
+			// determines the value of the ID var
+				// IF, the value of the full length of the current type array is greater than 0...
 			if (data.allItems[type].length > 0) {
-			
-				// the value of the ID var, is equal to...
-				// the value of the ID increases by 1 each time 
+				
+				// simplified
+				// (1) the value of the 'ID' var is equal to...
+				// (2) the id value, + 1, of...
+				// (3) the array => data.allItems[type]
+					// the value of the current 'type' array, of the allItems property, of the data object)
+					// type is a para of the 'addItem' method
+					// the value of the 'type' para will be either inc || exp
+				// (4) at the position w/ the value equal to => data.allItems[type].length - 1
+					// the full length of the current 'type' array of the allItems property of the data object, minus 1
+				
+				// the value of the ID var, becomes equal to the value of the id property + 1 of, the position, of the current type array
 				ID = data.allItems[type][ data.allItems[type].length - 1 ].id + 1;
 			
+			// ELSE...
 			} else {
 			
+				// the value of the ID var is 0
 				ID = 0;
 			
 			}
@@ -218,12 +239,47 @@ var budgetController = (function() {
 			
 			}
 			
-			// Pushes it into the above data structure
+			// the .push() method pushes the newItem object, produced by the 'addItem' method, into the data object data structure
 			data.allItems[type].push(newItem);
 			
-			// returns the new element
+			// the newItem object is returned from the method
 			return newItem;
 		
+		},
+		
+		// deletes an item
+		deleteItem: function(type, id) {
+			
+			var ids, index;
+		
+			// id = 3
+			data.allItems[type][id];
+			
+			// how do we select a specific id? // we need to create an array
+			// .map loops through an array, but unlike .forEach, map returns an array
+			ids = data.allItems[type].map( function(current) {
+			
+				return current.id;
+			
+			});
+			
+			// the .indexOf() returns the index # of the element of the current array
+			// array = [1 2 4 6 8]
+			// array.indexOf(id) => id = 6
+			// index becomes 3
+			// next we want to delete the item w/ the specific index from the array
+			index = ids.indexOf(id);
+			
+			// we still use -1 to denote a non-existent value
+			// we use splice to remove an element
+			// only gets executed when the item is actually in the array, aka when it is not -1
+			if (index !== -1) {
+			
+				// removes that specific item from the array
+				data.allItems[type].splice(index, 1)
+			
+			}
+			
 		},
 		
 		calculateBudget: function() {
@@ -272,26 +328,29 @@ var budgetController = (function() {
 	
 })();
 
-// MOD 3
+// MOD 3 - Controls the application by pulling data from MOD 1 and 2
 var globalController = (function(UICtrl, budgetCtrl) {
 	
-	// declares vars.
-	var input;
+	// declares vars used by the MOD
+	var DOM, input;
 
-	// makes all of the EL/H functional
-	function setupEventListeners() { // (3)
+	// makes all of the EL/H functional // (3)
+	function setupEventListeners() {
 		
-		// pulls the DOMstrings object into the globalController
-		var DOM = UICtrl.getDOMstrings();
+		// adds the DOMstrings object FROM the UIController TO the globalController
+		DOM = UICtrl.getDOMstrings();
 	
+		// makes the button activate when you click it
 		document.querySelector(DOM.inputBtn).addEventListener('click', function() {
 
 			ctrlAddItem();
 	
 		});
 
+		// makes the button ALSO activate when the enter key is pressed
 		document.querySelector(DOM.inputBtn).addEventListener('keypress', function(e) {
 			
+			// if the keyCode property of the EVENT ARGUMENT (e) has a value of 13 (the enter key)...
 			if(e.keyCode === 13) { 
 
 				ctrlAddItem();
@@ -319,8 +378,10 @@ var globalController = (function(UICtrl, budgetCtrl) {
 		
 	};
 
-	function ctrlAddItem() { // (4)
+	// the fn that is called when the EL/H are triggered // (4)
+	function ctrlAddItem() {
 		
+		// declares vars used by the fn
 		var input, newItem;
 
 		// 1. Get input values
@@ -357,23 +418,27 @@ var globalController = (function(UICtrl, budgetCtrl) {
 		if (itemID) {
 			
 			// inc-1
-			splitID = itemID.split('-'); // we isolated each part of the HTML using the split method
+			// we isolated each part of the HTML using the split method
+			splitID = itemID.split('-');
 			type = splitID[0];
-			ID = splitID[1];
+			ID = parseInt(splitID[1]);
 			
 			// 1. delete the item from the data structure
+			budgetCtrl.deleteItem(type, ID);
 			
 			// 2. Delete the item from the UI
+			UICtrl.deleteListItem(itemID);
 			
 			// 3. Update and show the new budget
+			updateBudget();
 		}
 	
 	};
 	
 	return {
 		
-		// calls everything when the application loads
-		init: function() { // (2)
+		// calls everything when the application loads // (2)
+		init: function() {
 		
 			console.log('Application has started.'); // (2-1)
 			UICtrl.display({ budget: 0, totalInc: 0, totalExp: 0, percentage: -1  }); // (2-2)
@@ -381,8 +446,10 @@ var globalController = (function(UICtrl, budgetCtrl) {
 
 		}
 			   
-	}
-	
+	};
+
+// connects the 3rd MOD to the other MODS
 })(UIController, budgetController);
 
-globalController.init(); // (1)
+// calls the init fn from the globalController MOD // (1)
+globalController.init();
