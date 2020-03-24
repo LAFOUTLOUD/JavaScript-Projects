@@ -1,4 +1,6 @@
+/************************************************************************************/
 // MOD 1
+
 var UIController = (function() {
 
 	// stores the code for the EL/H to make them easier to change
@@ -125,7 +127,9 @@ var UIController = (function() {
 
 })();
 
+/************************************************************************************/
 // MOD 2
+
 var budgetController = (function() {
 
 	// FC/P for creating Expense objects
@@ -328,7 +332,9 @@ var budgetController = (function() {
 	
 })();
 
+/************************************************************************************/
 // MOD 3 - Controls the application by pulling data from MOD 1 and 2
+
 var globalController = (function(UICtrl, budgetCtrl) {
 	
 	// declares vars used by the MOD
