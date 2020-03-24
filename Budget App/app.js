@@ -383,6 +383,16 @@ var globalController = (function(UICtrl, budgetCtrl) {
 		UICtrl.display(budget);
 		
 	};
+	
+	function updatePercentages() {
+	
+		// 1. calculate the percentages
+		
+		// 2. read percentages from the budget controller
+		
+		// 3. update the UI with the new percentages
+	
+	};
 
 	// the fn that is called when the EL/H are triggered // (4)
 	function ctrlAddItem() {
@@ -393,10 +403,10 @@ var globalController = (function(UICtrl, budgetCtrl) {
 		// 1. Get input values
 		input = UICtrl.getInput();
 		
-		/* we only want all of this code to work IF...
-			(a) the value of input.description is !== than empty
-			(b) the value of input.value is !isNaN
-			(c) the value of input.value is greater than 0 */
+		// we only want all of this code to work IF...
+			// (a) the value of input.description is !== than empty
+			// (b) the value of input.value is !isNaN
+			// (c) the value of input.value is greater than 0
 		if(input.description !== "" && !isNaN(input.value) && input.value > 0 ) {
 
 			// 2. Add the new item to our data structure/budget controller
@@ -410,6 +420,9 @@ var globalController = (function(UICtrl, budgetCtrl) {
 				   
 			// 5. Display the budget on the UI
 			updateBudget();
+			
+			// 6. calculate and update the percentages
+			updatePercentages();
 		};
 		
 	};
