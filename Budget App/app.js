@@ -1,4 +1,7 @@
-/*************************************************************************************/
+/*********************************************************************************************************************************************/
+// Budget Project
+/*********************************************************************************************************************************************/
+
 // MOD 1
 
 var UIController = (function() {
@@ -127,7 +130,6 @@ var UIController = (function() {
 
 })();
 
-/************************************************************************************/
 // MOD 2
 
 var budgetController = (function() {
@@ -137,6 +139,31 @@ var budgetController = (function() {
 		this.id = id;
 		this.description = description;
 		this.value = value;
+		this.percentage = -1;
+	};
+	
+	// adds a method to the PP of the Z? that calculates the percentage
+	Expense.prototype.calcPercentage = function(totalIncome) {
+	
+		if (totalIncome > 0) {
+			
+			// the value of the percentage property of THIS Expense object
+			// multiplying the outcome by 100 turns it into a percentage
+			// the outcome is rounded to the nearest whole number
+			this.percentage = Math.round(this.value / totalIncome) * 100;
+			
+		} else {
+		
+			this.percentage = -1;
+		
+		}
+	
+	};
+	
+	Expense.prototype.getPercentage = function() {
+	
+	
+	
 	};
 	
 	// FC/P for creating Income objects
@@ -302,12 +329,34 @@ var budgetController = (function() {
 
 				data.percentage = Math.round( (data.totals.exp / data.totals.inc) * 100);
 
-			} else { 
+			} else {
 
 				// -1 is the indicator for 'non-existence'
 				data.percentage = -1;
 
 			}
+		},
+		
+		calculatePercentages: function() {
+		
+			// we want to call the method, that we wrote above, forEach of the elements in the array in the data object data structure
+			
+			data.allItems.exp.forEach( function(cur) {
+			
+				current.calcPercentage();
+			
+			})
+		
+		},
+		
+		getPercentages: function() {
+		
+			var allPerc = data.allItems.exp.map( function(cur) {
+				return cur.getPercentage();
+			})
+			
+			return allPerc;
+		
 		},
 		
 		getBudget: function() {
@@ -332,7 +381,6 @@ var budgetController = (function() {
 	
 })();
 
-/************************************************************************************/
 // MOD 3 - Controls the application by pulling data from MOD 1 and 2
 
 var globalController = (function(UICtrl, budgetCtrl) {
@@ -428,6 +476,7 @@ var globalController = (function(UICtrl, budgetCtrl) {
 	};
 	
 	function ctrlDeleteItem(event) {
+		
 		var itemID, splitID, type, ID;
 	
 		// retrieves an id value from the DOM and stores it into the itemID var
